@@ -13,6 +13,7 @@ A feature-rich flight management plugin for **Paper / Spigot 1.21+** built with 
 | `/walkspeed <1-10>` | Set personal walk speed |
 | `/advancedfly reload` | Hot-reload config without restart |
 | `/advancedfly gui` | Open the interactive GUI |
+| `/freeze ` | Freezes The Selected Player or freezes you |
 | Action Bar | "✈ Flying" shown continuously while airborne |
 | Particles | Configurable particle trail while flying |
 | Fall Protection | 3-second fall damage immunity after disabling flight |
