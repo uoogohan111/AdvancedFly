@@ -8,9 +8,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Handles /walkspeed <1-10>.
+ * Handles /walkspeed <1-10|reset>.
+ * /walkspeed reset restores Bukkit's default walk speed (0.2f = roughly speed 2).
  */
 public class WalkSpeedCommand implements CommandExecutor {
+
+    private static final float DEFAULT_WALK_SPEED = 0.2f;
 
     private final ConfigManager config;
 
@@ -39,6 +42,14 @@ public class WalkSpeedCommand implements CommandExecutor {
             return true;
         }
 
+        // Handle reset
+        if (args[0].equalsIgnoreCase("reset")) {
+            player.setWalkSpeed(DEFAULT_WALK_SPEED);
+            player.sendMessage(config.getMessage("walkspeed-reset",
+                    config.speedTag(SpeedDataManager.toUserSpeed(DEFAULT_WALK_SPEED))));
+            return true;
+        }
+
         int speed;
         try {
             speed = Integer.parseInt(args[0]);
@@ -52,7 +63,6 @@ public class WalkSpeedCommand implements CommandExecutor {
             return true;
         }
 
-        // Bukkit walk speed range: 0.0 (slowest) – 1.0 (fastest)
         float bukkit = SpeedDataManager.toBukkitSpeed(speed);
         player.setWalkSpeed(bukkit);
 
