@@ -9,8 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Handles /flyspeed <1-10>.
+ * Handles /flyspeed <1-10|reset>.
  * Saves the speed per-player and applies it immediately if they are flying.
+ * /flyspeed reset restores the config default.
  */
 public class FlySpeedCommand implements CommandExecutor {
 
@@ -38,8 +39,17 @@ public class FlySpeedCommand implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            // Show usage
             player.sendMessage(config.getMessage("invalid-speed"));
+            return true;
+        }
+
+        // Handle reset
+        if (args[0].equalsIgnoreCase("reset")) {
+            int defaultSpeed = config.getDefaultFlySpeed();
+            SpeedDataManager speedData = plugin.getSpeedDataManager();
+            float bukkit = speedData.setFlySpeed(player.getUniqueId(), defaultSpeed);
+            player.setFlySpeed(bukkit);
+            player.sendMessage(config.getMessage("flyspeed-reset", config.speedTag(defaultSpeed)));
             return true;
         }
 
@@ -59,7 +69,7 @@ public class FlySpeedCommand implements CommandExecutor {
         // Save and apply
         SpeedDataManager speedData = plugin.getSpeedDataManager();
         float bukkit = speedData.setFlySpeed(player.getUniqueId(), speed);
-        player.setFlySpeed(bukkit); // applies immediately if flying
+        player.setFlySpeed(bukkit);
 
         player.sendMessage(config.getMessage("flyspeed-set", config.speedTag(speed)));
         return true;
