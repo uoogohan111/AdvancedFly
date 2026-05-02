@@ -51,6 +51,8 @@ messages:
 
   flyspeed-set:   "<green>Fly speed set to <yellow><speed></yellow>."
   walkspeed-set:  "<green>Walk speed set to <yellow><speed></yellow>."
+  flyspeed-reset: "<green>Fly speed Reset."
+  walkspeed-reset: "<green>Walk speed Reset."
 
   invalid-speed:      "<red>Invalid speed. Please enter a number between <yellow>1</yellow> and <yellow>10</yellow>."
   no-permission:      "<red>You don't have permission to do that."
