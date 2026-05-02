@@ -1,0 +1,43 @@
+name: Build AdvancedFly
+
+# Trigger on every push and pull-request targeting the main branch
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build with Maven (Java 21)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Java 21 (Temurin distribution)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'   # Caches ~/.m2 between runs for faster builds
+
+      # 3. Build the plugin with Maven (skip tests since this is a server plugin)
+      - name: Build with Maven
+        run: mvn --no-transfer-progress package -DskipTests
+
+      # 4. Upload the compiled .jar as a downloadable workflow artifact
+      - name: Upload plugin JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdvancedFly-jar
+          # The shade plugin outputs to target/AdvancedFly-<version>.jar
+          path: target/AdvancedFly-*.jar
+          retention-days: 30   # Keep artefact for 30 days
+
+      # 5. (Optional) Print the JAR name for reference in the logs
+      - name: Print JAR info
+        run: ls -lh target/AdvancedFly-*.jar

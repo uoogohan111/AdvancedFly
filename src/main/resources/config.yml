@@ -1,0 +1,72 @@
+# AdvancedFly Configuration
+# --------------------------
+# All messages support MiniMessage format.
+# See: https://docs.advntr.dev/minimessage/format.html
+
+# Worlds where /fly is completely disabled
+disabled-worlds:
+  - world_nether
+  - world_the_end
+
+# Cooldown in seconds between /fly toggles (0 = no cooldown)
+fly-cooldown: 5
+
+# Default speeds (1-10 scale)
+default-fly-speed: 5
+default-walk-speed: 2
+
+# Auto-disable flight when entering survival mode
+auto-disable-on-survival: true
+
+# Auto-enable flight when entering creative mode
+auto-enable-on-creative: true
+
+# Restore saved fly state when a player joins the server
+restore-fly-on-join: true
+
+# Fall-damage protection duration in seconds after disabling flight
+fall-protection-duration: 3
+
+# Show action bar while flying
+action-bar-enabled: true
+
+# Particles while flying
+particles-enabled: true
+# Particle type (must be a valid Bukkit Particle enum name)
+particle-type: CLOUD
+
+# Economy (Vault) — cost per /fly toggle
+economy-enabled: false
+economy-cost: 100.0
+
+# Per-player saved fly speed (persisted to disk)
+save-per-player-speed: true
+
+# ── Messages ────────────────────────────────────────────────────
+messages:
+  prefix: "<gray>[<gradient:#5865F2:#EB459E>AdvancedFly</gradient>]</gray> "
+
+  fly-enabled:  "<green>Flight <bold>enabled</bold>. Enjoy the skies! ✈"
+  fly-disabled: "<red>Flight <bold>disabled</bold>."
+
+  flyspeed-set:   "<green>Fly speed set to <yellow><speed></yellow>."
+  walkspeed-set:  "<green>Walk speed set to <yellow><speed></yellow>."
+
+  invalid-speed:      "<red>Invalid speed. Please enter a number between <yellow>1</yellow> and <yellow>10</yellow>."
+  no-permission:      "<red>You don't have permission to do that."
+  player-only:        "<red>This command can only be run by a player."
+  player-not-found:   "<red>Player <yellow><player></yellow> not found."
+  cooldown-active:    "<red>Please wait <yellow><seconds>s</yellow> before toggling flight again."
+  world-disabled:     "<red>Flight is disabled in this world."
+  console-not-allowed: "<red>Only players can use this command."
+
+  fly-enabled-other:  "<green>Enabled flight for <yellow><player></yellow>."
+  fly-disabled-other: "<red>Disabled flight for <yellow><player></yellow>."
+  fly-toggled-by-admin: "<yellow>Your flight was toggled by an admin."
+
+  reload-success: "<green>Configuration reloaded successfully."
+
+  economy-charge:      "<green>You were charged <yellow>$<amount></yellow> for flight."
+  economy-insufficient: "<red>You need <yellow>$<amount></yellow> to use flight."
+
+  action-bar-flying: "<gradient:#5865F2:#EB459E>✈ Flying</gradient>"

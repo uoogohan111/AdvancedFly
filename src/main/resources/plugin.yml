@@ -1,0 +1,52 @@
+name: AdvancedFly
+version: ${project.version}
+main: com.advancedfly.AdvancedFlyPlugin
+api-version: '1.21'
+description: Advanced flight management plugin with speeds, particles, and more.
+authors: [ YourName ]
+website: https://github.com/yourname/AdvancedFly
+
+softdepend:
+  - PlaceholderAPI
+  - Vault
+
+permissions:
+  advancedfly.fly:
+    description: Allows the player to toggle flight.
+    default: op
+  advancedfly.flyspeed:
+    description: Allows the player to change their fly speed.
+    default: op
+  advancedfly.walkspeed:
+    description: Allows the player to change their walk speed.
+    default: op
+  advancedfly.fly.others:
+    description: Allows toggling flight for other players.
+    default: op
+  advancedfly.admin:
+    description: Bypass all restrictions (world ban, cooldowns, etc.)
+    default: op
+    children:
+      advancedfly.fly: true
+      advancedfly.flyspeed: true
+      advancedfly.walkspeed: true
+      advancedfly.fly.others: true
+
+commands:
+  fly:
+    description: Toggle flight mode on/off.
+    usage: /fly [player]
+    permission: advancedfly.fly
+  flyspeed:
+    description: Set fly speed (1-10).
+    usage: /flyspeed <1-10>
+    permission: advancedfly.flyspeed
+  walkspeed:
+    description: Set walk speed (1-10).
+    usage: /walkspeed <1-10>
+    permission: advancedfly.walkspeed
+  advancedfly:
+    description: AdvancedFly admin & GUI commands.
+    usage: /advancedfly <reload|gui|status>
+    permission: advancedfly.admin
+    aliases: [ afly ]
