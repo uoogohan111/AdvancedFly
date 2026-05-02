@@ -184,4 +184,3 @@ AdvancedFly/
 ## License
 
 MIT — use freely, attribution appreciated.
-"# AdvancedFly" 

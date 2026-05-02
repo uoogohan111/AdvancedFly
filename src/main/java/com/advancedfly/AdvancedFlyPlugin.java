@@ -4,60 +4,43 @@ import com.advancedfly.commands.*;
 import com.advancedfly.hooks.PlaceholderHook;
 import com.advancedfly.hooks.VaultHook;
 import com.advancedfly.listeners.*;
-import com.advancedfly.managers.ConfigManager;
-import com.advancedfly.managers.CooldownManager;
-import com.advancedfly.managers.FlyManager;
-import com.advancedfly.managers.SpeedDataManager;
+import com.advancedfly.managers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * AdvancedFly — Main plugin entry point.
- *
- * Bootstraps all managers, commands, and listeners in the correct order.
  * Uses Paper 1.21+ API with the Adventure Component system throughout.
  */
 public final class AdvancedFlyPlugin extends JavaPlugin {
 
-    // ── Singleton access ─────────────────────────────────────────────────────
     private static AdvancedFlyPlugin instance;
 
-    // ── Managers ──────────────────────────────────────────────────────────────
-    private ConfigManager   configManager;
-    private FlyManager      flyManager;
-    private CooldownManager cooldownManager;
+    private ConfigManager    configManager;
+    private FlyManager       flyManager;
+    private CooldownManager  cooldownManager;
     private SpeedDataManager speedDataManager;
+    private FreezeManager    freezeManager;
 
-    // ── Optional hooks ────────────────────────────────────────────────────────
-    private VaultHook       vaultHook;
-    private boolean         placeholderApiPresent = false;
-
-    // ─────────────────────────────────────────────────────────────────────────
+    private VaultHook vaultHook;
+    private boolean   placeholderApiPresent = false;
 
     @Override
     public void onEnable() {
         instance = this;
-
-        // 1. Save & load default config
         saveDefaultConfig();
 
-        // 2. Initialise managers
-        configManager   = new ConfigManager(this);
-        cooldownManager = new CooldownManager(configManager);
+        configManager    = new ConfigManager(this);
+        cooldownManager  = new CooldownManager(configManager);
         speedDataManager = new SpeedDataManager(this);
-        flyManager      = new FlyManager(this, configManager, cooldownManager, speedDataManager);
+        flyManager       = new FlyManager(this, configManager, cooldownManager, speedDataManager);
+        freezeManager    = new FreezeManager();
 
-        // 3. Register optional third-party hooks
         hookVault();
         hookPlaceholderAPI();
-
-        // 4. Register commands
         registerCommands();
-
-        // 5. Register event listeners
         registerListeners();
 
-        // 6. Start repeating action-bar task
         if (configManager.isActionBarEnabled()) {
             flyManager.startActionBarTask();
         }
@@ -67,14 +50,9 @@ public final class AdvancedFlyPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Persist any unsaved fly-speed data
-        if (speedDataManager != null) {
-            speedDataManager.saveAll();
-        }
+        if (speedDataManager != null) speedDataManager.saveAll();
         getLogger().info("AdvancedFly disabled.");
     }
-
-    // ── Internal helpers ──────────────────────────────────────────────────────
 
     private void hookVault() {
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
@@ -83,7 +61,7 @@ public final class AdvancedFlyPlugin extends JavaPlugin {
                 getLogger().info("Vault hooked — economy features active.");
             } else {
                 vaultHook = null;
-                getLogger().warning("Vault found but no economy provider detected. Economy features disabled.");
+                getLogger().warning("Vault found but no economy provider detected.");
             }
         }
     }
@@ -101,36 +79,33 @@ public final class AdvancedFlyPlugin extends JavaPlugin {
         var flySpeedCmd  = new FlySpeedCommand(this, configManager);
         var walkSpeedCmd = new WalkSpeedCommand(this, configManager);
         var adminCmd     = new AdvancedFlyAdminCommand(this, flyManager, configManager);
+        var freezeCmd    = new FreezeCommand(freezeManager, configManager);
 
         getCommand("fly").setExecutor(flyCmd);
         getCommand("fly").setTabCompleter(flyCmd);
-
         getCommand("flyspeed").setExecutor(flySpeedCmd);
         getCommand("walkspeed").setExecutor(walkSpeedCmd);
-
+        getCommand("freeze").setExecutor(freezeCmd);
+        getCommand("freeze").setTabCompleter(freezeCmd);
         getCommand("advancedfly").setExecutor(adminCmd);
         getCommand("advancedfly").setTabCompleter(adminCmd);
     }
 
     private void registerListeners() {
         var pm = Bukkit.getPluginManager();
-        pm.registerEvents(new PlayerJoinListener(flyManager, configManager),          this);
-        pm.registerEvents(new PlayerGameModeListener(flyManager, configManager),      this);
-        pm.registerEvents(new PlayerMoveListener(flyManager, configManager),          this);
-        pm.registerEvents(new PlayerFallProtectionListener(flyManager),               this);
+        pm.registerEvents(new PlayerJoinListener(flyManager, configManager),       this);
+        pm.registerEvents(new PlayerGameModeListener(flyManager, configManager),   this);
+        pm.registerEvents(new PlayerMoveListener(flyManager, configManager),       this);
+        pm.registerEvents(new PlayerFallProtectionListener(flyManager),            this);
+        pm.registerEvents(new FreezeListener(freezeManager),                       this);
     }
 
-    // ── Accessors ─────────────────────────────────────────────────────────────
-
     public static AdvancedFlyPlugin getInstance() { return instance; }
-
-    public ConfigManager    getConfigManager()   { return configManager; }
-    public FlyManager       getFlyManager()      { return flyManager; }
-    public CooldownManager  getCooldownManager() { return cooldownManager; }
-    public SpeedDataManager getSpeedDataManager(){ return speedDataManager; }
-
-    /** @return Vault hook, or null if Vault is not present / no economy provider */
-    public VaultHook getVaultHook() { return vaultHook; }
-
-    public boolean isPlaceholderApiPresent() { return placeholderApiPresent; }
+    public ConfigManager    getConfigManager()    { return configManager; }
+    public FlyManager       getFlyManager()       { return flyManager; }
+    public CooldownManager  getCooldownManager()  { return cooldownManager; }
+    public SpeedDataManager getSpeedDataManager() { return speedDataManager; }
+    public FreezeManager    getFreezeManager()    { return freezeManager; }
+    public VaultHook        getVaultHook()        { return vaultHook; }
+    public boolean          isPlaceholderApiPresent() { return placeholderApiPresent; }
 }

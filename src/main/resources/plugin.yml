@@ -2,7 +2,7 @@ name: AdvancedFly
 version: ${project.version}
 main: com.advancedfly.AdvancedFlyPlugin
 api-version: '1.21'
-description: Advanced flight management plugin with speeds, particles, and more.
+description: Advanced flight management plugin with speeds, freeze, particles, and more.
 authors: [ YourName ]
 website: https://github.com/yourname/AdvancedFly
 
@@ -23,6 +23,12 @@ permissions:
   advancedfly.fly.others:
     description: Allows toggling flight for other players.
     default: op
+  advancedfly.freeze:
+    description: Allows the player to freeze themselves.
+    default: op
+  advancedfly.freeze.others:
+    description: Allows freezing other players.
+    default: op
   advancedfly.admin:
     description: Bypass all restrictions (world ban, cooldowns, etc.)
     default: op
@@ -31,6 +37,8 @@ permissions:
       advancedfly.flyspeed: true
       advancedfly.walkspeed: true
       advancedfly.fly.others: true
+      advancedfly.freeze: true
+      advancedfly.freeze.others: true
 
 commands:
   fly:
@@ -38,13 +46,17 @@ commands:
     usage: /fly [player]
     permission: advancedfly.fly
   flyspeed:
-    description: Set fly speed (1-10).
-    usage: /flyspeed <1-10>
+    description: Set fly speed (1-10) or reset.
+    usage: /flyspeed <1-10|reset>
     permission: advancedfly.flyspeed
   walkspeed:
-    description: Set walk speed (1-10).
-    usage: /walkspeed <1-10>
+    description: Set walk speed (1-10) or reset.
+    usage: /walkspeed <1-10|reset>
     permission: advancedfly.walkspeed
+  freeze:
+    description: Freeze/unfreeze yourself or another player.
+    usage: /freeze [player]
+    permission: advancedfly.freeze
   advancedfly:
     description: AdvancedFly admin & GUI commands.
     usage: /advancedfly <reload|gui|status>

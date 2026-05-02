@@ -72,3 +72,13 @@ messages:
   economy-insufficient: "<red>You need <yellow>$<amount></yellow> to use flight."
 
   action-bar-flying: "<gradient:#5865F2:#EB459E>✈ Flying</gradient>"
+
+  # Speed reset messages
+  flyspeed-reset:  "<green>Fly speed reset to default <yellow><speed></yellow>."
+  walkspeed-reset: "<green>Walk speed reset to default <yellow><speed></yellow>."
+
+  # Freeze messages
+  freeze-enabled-self:   "<aqua>You have been <bold>frozen</bold>. You cannot move."
+  freeze-disabled-self:  "<green>You have been <bold>unfrozen</bold>."
+  freeze-enabled-other:  "<aqua>Frozen <yellow><player></yellow>."
+  freeze-disabled-other: "<green>Unfrozen <yellow><player></yellow>."
